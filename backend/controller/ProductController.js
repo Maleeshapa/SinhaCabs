@@ -39,15 +39,13 @@ const createProduct = async (req, res) => {
             const {
                 productName,
                 productCode,
-                productUnit,
-                productBuyingPrice,
                 productSellingPrice,
                 productDescription,
                 productWarranty,
                 productDiscount,
                 categoryId,
-                productChassi ,
-                 rentOrHire 
+                productChassi,
+                rentOrHire 
             } = req.body;
 
             // Validate required fields
@@ -72,21 +70,15 @@ const createProduct = async (req, res) => {
                 productImage = `${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`;
             }
 
-            // Calculate profit based on buying and selling prices
-            const productProfit = parseFloat(productSellingPrice) - parseFloat(productBuyingPrice);
-
             const newProduct = await Product.create({
                 productName,
                 productCode,
-                productUnit,
-                productBuyingPrice,
                 productSellingPrice,
                 productDiscount,
                 productWarranty,
-                productProfit,
                 productDescription,
                 productImage,
-                productStatus: "In stock",
+                productStatus: "Available",
                 productChassi ,
                 rentOrHire ,
                 category_categoryId: categoryId,
@@ -168,9 +160,7 @@ const updateProduct = async (req, res) => {
             const {
                 productName,
                 productCode,
-                productUnit,
                 productDiscount,
-                productBuyingPrice,
                 productSellingPrice,
                 productWarranty,
                 productDescription,
@@ -206,17 +196,13 @@ const updateProduct = async (req, res) => {
                 productImage = `${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`;
             }
 
-            const productProfit = parseFloat(productSellingPrice) - parseFloat(productBuyingPrice);
 
             await product.update({
                 productName,
                 productCode,
-                productUnit,
                 productDiscount,
-                productBuyingPrice,
                 productSellingPrice,
                 productWarranty,
-                productProfit,
                 productDescription,
                 productEmi,
                 productStatus,

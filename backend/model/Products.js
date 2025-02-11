@@ -22,24 +22,12 @@ const Product = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: true,
     },
-    productUnit: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    productBuyingPrice: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     productSellingPrice: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
     productWarranty: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    productProfit: {
-      type: DataTypes.FLOAT,
       allowNull: true,
     },
     productEmi: {

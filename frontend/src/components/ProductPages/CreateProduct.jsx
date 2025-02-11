@@ -67,10 +67,8 @@ const CreateProduct = () => {
         productName: selectedProd.productName || '',
         productCode: selectedProd.productCode || '',
         sellingPrice: selectedProd.productSellingPrice || '',
-        buyingPrice: selectedProd.productBuyingPrice || '',
         warranty: selectedProd.productWarranty || '',
         description: selectedProd.productDescription || '',
-        unit: selectedProd.productUnit || '',
         image: '',
         productChassi: selectedProd.productChassi || '',  
       });
@@ -89,11 +87,9 @@ const CreateProduct = () => {
     formDataToSend.append('productName', formData.productName);
     formDataToSend.append('productCode', formData.productCode);
     formDataToSend.append('productSellingPrice', formData.sellingPrice);
-    formDataToSend.append('productBuyingPrice', formData.buyingPrice);
     formDataToSend.append('productDescription', formData.description);
     formDataToSend.append('productWarranty', formData.warranty);
     formDataToSend.append('categoryId', formData.productCategory);
-    formDataToSend.append('productUnit', formData.unit);
     formDataToSend.append('productChassi', formData.productChassi); 
 
     console.log(formData);

@@ -1,0 +1,505 @@
+CREATE TABLE `sales` (
+  `salesId` int(11) NOT NULL,
+  `customerId` int(11) DEFAULT NULL,
+  `guarantorId` int(11) DEFAULT NULL,
+  `productId` int(11) DEFAULT NULL,
+  `saleDate` datetime DEFAULT NULL,
+  `cashierName` varchar(255) DEFAULT NULL,
+  `driverId` int(11) DEFAULT NULL,
+  `transactionId` int(11) DEFAULT NULL,
+  `paymentStatus` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `transactions` (
+  `transactionId` int(11) NOT NULL,
+  `salesId` int(11) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `extraCharges` decimal(10,2) DEFAULT 0.00,
+  `totalAmount` decimal(10,2) NOT NULL,
+  `paymentType` enum('cash','pay_later','online') NOT NULL,
+  `paidAmount` decimal(10,2) DEFAULT 0.00,
+  `due` decimal(10,2) DEFAULT 0.00,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { DataTypes } = require('sequelize');
+const sequelize = require('../dbConfig');
+
+const Sales = sequelize.define('Sales', {
+    salesId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    customerId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'customer',
+            key: 'cusId'
+        }
+    },
+    guarantorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'guarantor',
+            key: 'guarantorId'
+        }
+    },
+    productId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'products',
+            key: 'productId'
+        }
+    },
+    saleDate: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    cashierName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    driverId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'driver',
+            key: 'id'
+        }
+    },
+    transactionId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'transactions',
+            key: 'transactionId'
+        }
+    },
+    paymentStatus: {
+        type: DataTypes.ENUM('pending', 'completed'),
+        defaultValue: 'pending'
+    },
+    status: {
+        type: DataTypes.ENUM('hire', 'rent', 'sale'),
+        defaultValue: 'hire'
+    },
+    note: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    }
+}, {
+    tableName: 'sales',
+    timestamps: true,
+    underscored: true
+});
+
+const Transaction = sequelize.define('Transaction', {
+    transactionId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    salesId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'sales',
+            key: 'salesId'
+        }
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    extraCharges: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0
+    },
+    totalAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    paymentType: {
+        type: DataTypes.ENUM('cash', 'pay_later', 'online'),
+        allowNull: false
+    },
+    paidAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0
+    },
+    due: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    }
+}, {
+    tableName: 'transactions',
+    timestamps: true,
+    underscored: true
+});
+
+// Define associations
+Sales.belongsTo(Transaction, { foreignKey: 'transactionId' });
+Transaction.hasOne(Sales, { foreignKey: 'transactionId' });
+
+// Additional associations for Sales
+Sales.belongsTo(Customer, { foreignKey: 'customerId' });
+Sales.belongsTo(Guarantor, { foreignKey: 'guarantorId' });
+Sales.belongsTo(Product, { foreignKey: 'productId' });
+Sales.belongsTo(Driver, { foreignKey: 'driverId' });
+
+module.exports = { Sales, Transaction };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS `transaction`;
+DROP TABLE IF EXISTS `transactions`;
+
+-- Create new sales table
+CREATE TABLE `sales` (
+  `salesId` int(11) NOT NULL AUTO_INCREMENT,
+  `customerId` int(11) DEFAULT NULL,
+  `guarantorId` int(11) DEFAULT NULL,
+  `productId` int(11) DEFAULT NULL,
+  `saleDate` datetime DEFAULT NULL,
+  `cashierName` varchar(255) DEFAULT NULL,
+  `driverId` int(11) DEFAULT NULL,
+  `transactionId` int(11) DEFAULT NULL,
+  `paymentStatus` enum('pending', 'completed') DEFAULT 'pending',
+  `status` enum('hire', 'rent', 'sale') DEFAULT 'hire',
+  `note` text DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`salesId`),
+  KEY `idx_sale_date` (`saleDate`),
+  CONSTRAINT `fk_sales_customerId` FOREIGN KEY (`customerId`) REFERENCES `customer` (`cusId`),
+  CONSTRAINT `fk_sales_guarantorId` FOREIGN KEY (`guarantorId`) REFERENCES `guarantor` (`guarantorId`),
+  CONSTRAINT `fk_sales_productId` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`),
+  CONSTRAINT `fk_sales_driverId` FOREIGN KEY (`driverId`) REFERENCES `driver` (`id`)
+);
+
+-- Create new transactions table
+CREATE TABLE `transactions` (
+  `transactionId` int(11) NOT NULL AUTO_INCREMENT,
+  `salesId` int(11) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `extraCharges` decimal(10,2) DEFAULT 0.00,
+  `totalAmount` decimal(10,2) NOT NULL,
+  `paymentType` enum('cash', 'pay_later', 'online') NOT NULL,
+  `paidAmount` decimal(10,2) DEFAULT 0.00,
+  `due` decimal(10,2) DEFAULT 0.00,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`transactionId`),
+  KEY `salesId` (`salesId`),
+  CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`salesId`) REFERENCES `sales` (`salesId`) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- Update sales table with transaction foreign key
+ALTER TABLE `sales` 
+ADD CONSTRAINT `fk_sales_transactionId` 
+FOREIGN KEY (`transactionId`) 
+REFERENCES `transactions` (`transactionId`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const { DataTypes } = require('sequelize');
+// const sequelize = require('../dbConfig');
+// const Customer = require('./Customer');
+// const Guarantor = require('./Guarantor');
+// const Product = require('./Products');
+// const Driver = require('./Driver');
+
+// const Sales = sequelize.define('Sales', {
+//     salesId: {
+//         type: DataTypes.INTEGER,
+//         primaryKey: true,
+//         autoIncrement: true
+//     },
+//     customerId: {
+//         type: DataTypes.INTEGER,
+//         allowNull: false,
+//         references: {
+//             model: 'customer',
+//             key: 'cusId'
+//         }
+//     },
+//     guarantorId: {
+//         type: DataTypes.INTEGER,
+//         allowNull: false,
+//         references: {
+//             model: 'guarantor',
+//             key: 'guarantorId'
+//         }
+//     },
+//     productId: {
+//         type: DataTypes.INTEGER,
+//         allowNull: false,
+//         references: {
+//             model: 'products',
+//             key: 'productId'
+//         }
+//     },
+//     saleDate: {
+//         type: DataTypes.DATE,
+//         allowNull: true
+//     },
+//     cashierName: {
+//         type: DataTypes.STRING,
+//         allowNull: true
+//     },
+//     driverId: {
+//         type: DataTypes.INTEGER,
+//         allowNull: false,
+//         references: {
+//             model: 'driver',
+//             key: 'id'
+//         }
+//     },
+//     transactionId: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true,
+//         references: {
+//             model: 'transactions',
+//             key: 'transactionId'
+//         }
+//     },
+//     paymentStatus: {
+//         type: DataTypes.STRING,
+//         allowNull: true
+//     },
+//     status: {
+//         type: DataTypes.STRING,
+//         allowNull: true
+//     },
+//     note: {
+//         type: DataTypes.TEXT,
+//         allowNull: true
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         defaultValue: DataTypes.NOW
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         defaultValue: DataTypes.NOW
+//     }
+// }, {
+//     tableName: 'sales',
+//     timestamps: true,
+//     underscored: true
+// });
+
+// const Transaction = sequelize.define('Transaction', {
+//     transactionId: {
+//         type: DataTypes.INTEGER,
+//         primaryKey: true,
+//         autoIncrement: true
+//     },
+//     salesId: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true,
+//         references: {
+//             model: 'sales',
+//             key: 'salesId'
+//         }
+//     },
+//     price: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true
+//     },
+//     extraCharges: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true
+//     },
+//     totalAmount: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true
+//     },
+//     paymentType: {
+//         type: DataTypes.STRING,
+//         allowNull: true
+//     },
+//     paidAmount: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true
+//     },
+//     due: {
+//         type: DataTypes.INTEGER,
+//         allowNull: true
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         defaultValue: DataTypes.NOW
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         defaultValue: DataTypes.NOW
+//     }
+// }, {
+//     tableName: 'transactions',
+//     timestamps: true,
+//     underscored: true
+// });
+
+// // Define associations
+// Sales.belongsTo(Transaction, { foreignKey: 'transactionId' });
+// Transaction.hasOne(Sales, { foreignKey: 'transactionId' });
+
+// // Additional associations for Sales
+// Sales.belongsTo(Customer, { foreignKey: 'cusId' });
+// Sales.belongsTo(Guarantor, { foreignKey: 'guarantorId' });
+// Sales.belongsTo(Product, { foreignKey: 'productId' });
+// Sales.belongsTo(Driver, { foreignKey: 'id' });
+
+// module.exports = { Sales, Transaction };
+
+
+CREATE TABLE `transactions` (
+  `transactionId` int(11) NOT NULL AUTO_INCREMENT,
+  `salesId` int(11) NULL,
+  `price` int(11) NULL,
+  `extraCharges` int(11) NULL,
+  `totalAmount` int(11) NULL,
+  `paymentType` varchar(50) NULL,
+  `paidAmount` int(11) NULL,
+  `due` int(11) NULL,
+  `createdAt` datetime NULL,
+  `updatedAt` datetime NULL,
+  PRIMARY KEY (`transactionId`),
+  KEY `salesId` (`salesId`),
+  CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`salesId`) REFERENCES `sales` (`salesId`) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+
+
+CREATE TABLE `sales` (
+  `salesId` int(11) NOT NULL AUTO_INCREMENT,
+  `customerId` int(11) NULL,
+  `guarantorId` int(11) NULL,
+  `productId` int(11) NULL,
+  `saleDate` datetime NULL,
+  `cashierName` varchar(255) NULL,
+  `driverId` int(11) NULL,
+  `transactionId` int(11) NULL,
+  `paymentStatus` varchar(50) NULL,
+  `status` varchar(50) NULL,
+  `note` text NULL,
+  `createdAt` timestamp NULL DEFAULT current_timestamp(),
+  `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`salesId`),
+  KEY `idx_sale_date` (`saleDate`),
+  CONSTRAINT `fk_sales_customerId` FOREIGN KEY (`customerId`) REFERENCES `customer` (`cusId`),
+  CONSTRAINT `fk_sales_guarantorId` FOREIGN KEY (`guarantorId`) REFERENCES `guarantor` (`guarantorId`),
+  CONSTRAINT `fk_sales_productId` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`),
+  CONSTRAINT `fk_sales_driverId` FOREIGN KEY (`driverId`) REFERENCES `driver` (`id`)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

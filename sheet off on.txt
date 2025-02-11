@@ -1,0 +1,134 @@
+function onEdit(e) {
+  const sheet = e.source.getActiveSheet();
+  const range = e.range;
+
+  // Check if the edit is in column B (index 2) and row 2
+  if (sheet.getName() === 'Sheet1' && range.getColumn() === 2 && range.getRow() === 2) {
+    const value = range.getValue();
+    const status = value === 'on' ? 1 : 0;
+
+    // Make an HTTP POST request to your backend API
+    const url = 'https://sinhacabs.kandyis.live/api/switch'; // Replace with your actual backend URL
+    const options = {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ status: status }),
+      muteHttpExceptions: true
+    };
+
+    const response = UrlFetchApp.fetch(url, options);
+
+    if (response.getResponseCode() !== 200) {
+      throw new Error(`Failed to update status: ${response.getContentText()}`);
+    }
+  }
+}
+
+
+------------------------------------------
+
+
+To achieve this, you'll need to set up a system where changes in your Google Sheet trigger an update to your backend API. Here's a step-by-step guide to accomplish this:
+
+Step 1: Set Up Google Sheets
+Create a Google Sheet:
+
+Open Google Sheets and create a new sheet.
+
+In column B2, create a dropdown with options "on" and "off".
+
+Name Your Sheet:
+
+Give your sheet a name, for example, "SwitchControl".
+
+Step 2: Set Up Google Apps Script
+Open Script Editor:
+
+In your Google Sheet, go to Extensions > Apps Script.
+
+Write the Script:
+
+Replace the default code with the following script:
+
+javascript
+Copy
+function onEdit(e) {
+  // Define the sheet name and cell to monitor
+  const sheetName = 'SwitchControl';
+  const cellToMonitor = 'B2';
+
+  // Get the edited range
+  const range = e.range;
+  const sheet = range.getSheet();
+
+  // Check if the edit is in the correct sheet and cell
+  if (sheet.getName() === sheetName && range.getA1Notation() === cellToMonitor) {
+    const value = range.getValue();
+    const status = value === 'on' ? 1 : 0;
+
+    // Call the API to update the switch status
+    updateSwitchStatus(status);
+  }
+}
+
+function updateSwitchStatus(status) {
+  const url = 'https://sinhacabs.kandyis.live/api/switch';
+  const payload = {
+    id: 1, // Assuming the switch ID is 1
+    status: status
+  };
+
+  const options = {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload)
+  };
+
+  try {
+    const response = UrlFetchApp.fetch(url, options);
+    Logger.log(response.getContentText());
+  } catch (error) {
+    Logger.log(error.toString());
+  }
+}
+Step 3: Deploy the Script
+Save the Script:
+
+Click the disk icon or press Ctrl + S to save the script. Give it a name like "UpdateSwitchStatus".
+
+Set Up Trigger:
+
+In the Apps Script editor, click on the clock icon to open the triggers page.
+
+Click on + Add Trigger.
+
+Choose onEdit from the function dropdown.
+
+Set the event type to On edit.
+
+Save the trigger.
+
+Step 4: Test the Setup
+Change the Dropdown:
+
+Go back to your Google Sheet and change the dropdown in B2 to "on" or "off".
+
+Check the Logs:
+
+Go back to the Apps Script editor and check the logs (View > Logs) to see if the API call was successful.
+
+Step 5: Verify Backend Update
+Check Your Database:
+
+Verify that the status column in your switch table has been updated accordingly.
+
+Additional Notes
+API Security: Ensure your API endpoint is secure and only accessible by authorized requests.
+
+Error Handling: Enhance the script with more robust error handling and logging as needed.
+
+Multiple Switches: If you have multiple switches, you can modify the script to handle different IDs dynamically.
+
+By following these steps, you should be able to control your backend switch status directly from a Google Sheet.
+
+

@@ -97,6 +97,9 @@ app.get('/product/image/:productCode', ProductController.getProductImageByCode);
 
 
 
+app.get("/products/getRentProducts", ProductController.getRentProducts); 
+
+
 //guarantor routes
 app.post("/guarantor", GuarantorController.createGuarantor);
 app.get("/guarantors", GuarantorController.getAllGuarantors);
@@ -108,6 +111,7 @@ app.get("/guarantors/nic-suggestions/:query", GuarantorController.getGurantorNIC
 
 
 
+
 app.post("/salesCreate", SalesController.createSale);
 app.post("/hireCreate", SalesController.hireCreate);
 app.get("/salesGet", SalesController.getAllSales);
@@ -116,6 +120,8 @@ app.get("/salesRentGet", SalesController.getAllSalesRent);
 app.get('/salesGet/:id', SalesController.getSaleById);
 app.put('/salesUpdate/:id', SalesController.updateSale);
 app.delete('/salesDelete/:id', SalesController.deleteSale);
+app.get('/revenue-analytics', SalesController.getRevenueAnalytics);
+app.get('/api/monthly-product-income', SalesController.getMonthlyProductIncome);
 
 
 //store routes

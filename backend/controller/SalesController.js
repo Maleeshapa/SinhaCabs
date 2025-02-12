@@ -212,7 +212,7 @@ const { Sales, Transaction } = require('../model/Sales');
 const sequelize = require('../dbConfig');
 const Customer = require('../model/Customer');
 const Product = require('../model/Products');
-
+const { Op, Sequelize } = require('sequelize');
 
 const createSale = async (req, res) => {
     const t = await sequelize.transaction();
@@ -245,7 +245,8 @@ const createSale = async (req, res) => {
             totalAmount,
             paymentType,
             paidAmount,
-            due
+            due,
+            pId: productId
         }, { transaction: t });
 
         // Update the Sale record with the transactionId
@@ -434,7 +435,8 @@ const hireCreate = async (req, res) => {
             totalAmount,
             paymentType,
             paidAmount,
-            due
+            due,
+            pId: productId
         }, { transaction: t });
 
         // Update the Sale record with the transactionId
@@ -453,5 +455,116 @@ const hireCreate = async (req, res) => {
     }
 };
 
+const getRevenueAnalytics = async (req, res) => {
+    try {
+        const { startDate, endDate, groupBy = 'day' } = req.query;
 
-module.exports = { createSale, getAllSales, getSaleById, updateSale, deleteSale, getAllSalesHire , getAllSalesRent , hireCreate};
+        // Validate date parameters
+        if (!startDate || !endDate) {
+            return res.status(400).json({ 
+                error: 'Both startDate and endDate are required' 
+            });
+        }
+
+        // Define time grouping formats based on groupBy parameter
+        const timeFormats = {
+            day: '%Y-%m-%d',
+            week: '%Y-%U',
+            month: '%Y-%m',
+            year: '%Y'
+        };
+
+        const format = timeFormats[groupBy] || timeFormats.day;
+
+        // Perform optimized aggregate query
+        const revenue = await Transaction.findAll({
+            attributes: [
+                [Sequelize.fn('DATE_FORMAT', Sequelize.col('createdAt'), format), 'timePeriod'],
+                [Sequelize.fn('SUM', Sequelize.col('paidAmount')), 'totalRevenue'],
+                [Sequelize.fn('COUNT', Sequelize.col('transactionId')), 'transactionCount']
+            ],
+            where: {
+                createdAt: {
+                    [Op.between]: [startDate, endDate]
+                },
+                paidAmount: {
+                    [Op.gt]: 0  // Only include transactions with positive amounts
+                }
+            },
+            group: [Sequelize.fn('DATE_FORMAT', Sequelize.col('createdAt'), format)],
+            order: [[Sequelize.fn('DATE_FORMAT', Sequelize.col('createdAt'), format), 'ASC']],
+            raw: true
+        });
+
+        // Calculate summary statistics
+        const summary = {
+            totalRevenue: revenue.reduce((sum, record) => sum + parseFloat(record.totalRevenue), 0),
+            totalTransactions: revenue.reduce((sum, record) => sum + parseInt(record.transactionCount), 0),
+            averageRevenuePerPeriod: revenue.length > 0 
+                ? (revenue.reduce((sum, record) => sum + parseFloat(record.totalRevenue), 0) / revenue.length).toFixed(2)
+                : 0
+        };
+
+        res.status(200).json({
+            groupedBy: groupBy,
+            timeRange: {
+                start: startDate,
+                end: endDate
+            },
+            summary,
+            revenueData: revenue
+        });
+
+    } catch (error) {
+        console.error('Error in revenue analytics:', error);
+        res.status(500).json({ 
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+    }
+};
+
+const getMonthlyProductIncome = async (req, res) => {
+    try {
+        const currentDate = new Date();
+        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        const monthlyIncome = await Transaction.findAll({
+            attributes: [
+                [Sequelize.fn('SUM', Sequelize.col('paidAmount')), 'totalIncome'],
+                [Sequelize.col('Product.productName'), 'productName']
+            ],
+            include: [{
+                model: Product,
+                attributes: ['productName']
+            }],
+            where: {
+                createdAt: {
+                    [Op.between]: [firstDayOfMonth, lastDayOfMonth]
+                }
+            },
+            group: ['Product.productId'],
+            raw: true
+        });
+
+        res.status(200).json(monthlyIncome);
+    } catch (error) {
+        console.error('Error fetching monthly product income:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+module.exports = { 
+    createSale, 
+    getAllSales, 
+    getSaleById, 
+    updateSale, 
+    deleteSale, 
+    getAllSalesHire , 
+    getAllSalesRent , 
+    hireCreate ,
+    getRevenueAnalytics,
+    getMonthlyProductIncome
+  };

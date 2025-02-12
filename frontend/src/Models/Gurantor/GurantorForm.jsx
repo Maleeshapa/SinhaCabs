@@ -63,7 +63,7 @@ const Form = ({ closeModal, onSave, guarantor }) => {
 
     try {
       const url = guarantor
-        ? `${config.BASE_URL}/guarantor/${guarantor.guarantorId}`
+        ? `${config.BASE_URL}/guarantors/${guarantor.guarantorId}`
         : `${config.BASE_URL}/guarantor`;
       const method = guarantor ? 'PUT' : 'POST';
 

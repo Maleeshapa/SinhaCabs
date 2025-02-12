@@ -47,23 +47,31 @@ const GuarantorList = () => {
 
   const handleDelete = async () => {
     try {
-      const guarantorId = data[deleteRowIndex][0];
-      const response = await fetch(`${config.BASE_URL}/guarantors/${guarantorId}`, {
-        method: 'DELETE',
-      });
+        // Fetch the actual guarantorId from the backend data
+        const response = await fetch(`${config.BASE_URL}/guarantors`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch guarantors');
+        }
+        const guarantors = await response.json();
+        const guarantorToDelete = guarantors[deleteRowIndex];
+        const guarantorId = guarantorToDelete.guarantorId; // Use the actual ID
 
-      if (!response.ok) {
-        throw new Error('Failed to delete guarantor');
-      }
+        const deleteResponse = await fetch(`${config.BASE_URL}/guarantors/${guarantorId}`, {
+            method: 'DELETE',
+        });
 
-      setData(prevData => prevData.filter((_, index) => index !== deleteRowIndex));
-      fetchGuarantors();
+        if (!deleteResponse.ok) {
+            throw new Error('Failed to delete guarantor');
+        }
+
+        setData(prevData => prevData.filter((_, index) => index !== deleteRowIndex));
+        fetchGuarantors();
     } catch (err) {
-      setError(err.message);
+        setError(err.message);
     } finally {
-      setShowConfirmModal(false);
+        setShowConfirmModal(false);
     }
-  };
+};
 
   const confirmDelete = (rowIndex) => {
     setDeleteRowIndex(rowIndex);
@@ -126,7 +134,7 @@ const GuarantorList = () => {
             style={{
               content: {
                 width: '30%',
-                height: '90%',
+                height: '70%',
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',

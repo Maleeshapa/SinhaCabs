@@ -161,11 +161,11 @@ const Sidebar = () => {
         },
 
         {
-            title: 'Gurantor',
+            title: 'Guarantor',
             icon: <i className="bi bi-person-raised-hand" style={{ fontSize: '20px' }}></i>,
             path: '/gurantor',
             submenus: [
-                { title: 'Gurantor List', path: '/gurantor' }
+                { title: 'Guarantor List', path: '/gurantor' }
             ]
         }
         ,

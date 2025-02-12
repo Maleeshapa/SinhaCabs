@@ -13,13 +13,18 @@ const History = () => {
   const columns = [
     '#',
     'Sale Date',
-    'Customer',
-    'Product',
+    'Customer Name',
+    'Customer Nic',
+    'Guarantor Name',
+    'Guarantor Nic',
+    'Vechicle',
     'Payment Status',
+    'Rent / Hire Price',
+    'Extra Charges',
     'Total Amount',
     'Paid Amount',
     'Due Amount',
-    'Status'
+    'Rent or Hire'
   ];
 
   useEffect(() => {
@@ -33,25 +38,37 @@ const History = () => {
         throw new Error('Failed to fetch history');
       }
       const salesData = await response.json();
-  
+
       // Fetch customer and product details for each sale
       const formattedData = await Promise.all(salesData.map(async (sale, index) => {
         // Fetch customer name
         const customerResponse = await fetch(`${config.BASE_URL}/customer/${sale.customerId}`);
         const customerData = await customerResponse.json();
         const customerName = customerData.cusName;
-  
+        const customerNic = customerData.nic;
+
+        const guarantorsResponse = await fetch(`${config.BASE_URL}/guarantor/${sale.guarantorId}`);
+        const guarantorsData = await guarantorsResponse.json();
+        const guarantorsName = guarantorsData.guarantorName;
+        const guarantorsNic = guarantorsData.guarantorNic;
+
+
         // Fetch product name
         const productResponse = await fetch(`${config.BASE_URL}/product/${sale.productId}`);
         const productData = await productResponse.json();
         const productName = productData.productName;
-  
+
         return [
           index + 1,
           new Date(sale.saleDate).toLocaleDateString(),
           customerName, // Use customer name instead of ID
+          customerNic,
+          guarantorsName,
+          guarantorsNic,
           productName,  // Use product name instead of ID
           sale.paymentStatus,
+          sale.Transaction?.price,
+          sale.Transaction?.extraCharges,
           sale.Transaction?.totalAmount || 0,
           sale.Transaction?.paidAmount || 0,
           sale.Transaction?.due || 0,
@@ -82,8 +99,8 @@ const History = () => {
     return data.slice(startIndex, endIndex);
   };
 
-  const title = 'Hire History';
-  const invoice = 'hire_history.pdf';
+  const title = 'Hire and Rent History';
+  const invoice = 'hire and rent history.pdf';
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -95,7 +112,7 @@ const History = () => {
 
   return (
     <div className="scrolling-container">
-      <h4>Rent History</h4>
+      <h4>Rent and Hire History</h4>
       <Table
         data={getPaginatedData()}
         columns={columns}

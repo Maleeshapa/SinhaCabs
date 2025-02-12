@@ -83,18 +83,18 @@ const Customer = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        cusOffice: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        cusStore: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        cusEmail: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
+        // cusOffice: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        // },
+        // cusStore: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        // },
+        // cusEmail: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        // },
         nic: {
             type: DataTypes.STRING,
             allowNull: true,

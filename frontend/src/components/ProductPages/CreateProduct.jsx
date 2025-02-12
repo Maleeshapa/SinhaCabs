@@ -91,6 +91,7 @@ const CreateProduct = () => {
     formDataToSend.append('productWarranty', formData.warranty);
     formDataToSend.append('categoryId', formData.productCategory);
     formDataToSend.append('productChassi', formData.productChassi); 
+    formDataToSend.append('rentOrHire', 'rent');
 
     console.log(formData);
 
@@ -160,7 +161,7 @@ const CreateProduct = () => {
   return (
     <div>
       <div className="scrolling-container">
-        <h4>{selectedProd ? 'Edit Vechicle' : 'Add Vechicle'}</h4>
+        <h4>{selectedProd ? 'Edit Rent Vechicle' : 'Add Rent Vechicle'}</h4>
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}

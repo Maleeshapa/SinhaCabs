@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 
 async function createCustomer(req, res) {
     try {
-        const { cusName, cusAddress, cusPhone, cusJob, cusOffice, cusStore, cusEmail, nic, license, customerReview, customerDescription } = req.body;
+        const { cusName, cusAddress, cusPhone, cusJob, nic, license, customerReview, customerDescription } = req.body;
 
         // Generate cusCode
         const lastCustomer = await Customer.findOne({
@@ -22,9 +22,6 @@ async function createCustomer(req, res) {
             cusAddress,
             cusPhone,
             cusJob,
-            cusOffice,
-            cusStore,
-            cusEmail,
             nic,
             license,
             customerReview,
@@ -83,9 +80,6 @@ async function updateCustomer(req, res) {
             cusAddress,
             cusPhone,
             cusJob,
-            cusOffice,
-            cusStore,
-            cusEmail,
             nic,
             license,
             customerReview,
@@ -102,9 +96,6 @@ async function updateCustomer(req, res) {
             cusAddress,
             cusPhone,
             cusJob,
-            cusOffice,
-            cusStore,
-            cusEmail,
             nic,
             license,
             customerReview,

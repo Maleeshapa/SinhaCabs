@@ -11,9 +11,9 @@ import CardSix from './CardSix';
 
 const Dashboard = () => {
   const base_url = config.BASE_URL;
-  const [pendingChequeCount, setPendingChequeCount] = useState(0);
-  const [pendingChequeAmount, setPendingChequeAmount] = useState(0);
-  const [clearedChequeAmount, setClearedChequeAmount] = useState(0);
+  // const [pendingChequeCount, setPendingChequeCount] = useState(0);
+  // const [pendingChequeAmount, setPendingChequeAmount] = useState(0);
+  // const [clearedChequeAmount, setClearedChequeAmount] = useState(0);
 
   const [reportData, setReportData] = useState({
     TodayTotal: "0",
@@ -33,67 +33,67 @@ const Dashboard = () => {
   const [stockSize, setStockSize] = useState([]);
   const [labels, setLabels] = useState([]);
 
-  useEffect(() => {
-    const fetchChequeData = async () => {
-      try {
-        const pendingResponse = await fetch(`${base_url}/pendingChequeTotal`);
-        const clearedResponse = await fetch(`${base_url}/clearedChequeTotal`);
+  // useEffect(() => {
+  //   const fetchChequeData = async () => {
+  //     try {
+  //       const pendingResponse = await fetch(`${base_url}/pendingChequeTotal`);
+  //       const clearedResponse = await fetch(`${base_url}/clearedChequeTotal`);
 
-        if (!pendingResponse.ok || !clearedResponse.ok) {
-          throw new Error('Failed to fetch cheque amounts');
-        }
+  //       if (!pendingResponse.ok || !clearedResponse.ok) {
+  //         throw new Error('Failed to fetch cheque amounts');
+  //       }
 
-        const pendingResult = await pendingResponse.json();
-        const clearedResult = await clearedResponse.json();
+  //       const pendingResult = await pendingResponse.json();
+  //       const clearedResult = await clearedResponse.json();
 
-        setPendingChequeAmount(pendingResult.totalAmount || 0);
-        setClearedChequeAmount(clearedResult.totalAmount || 0);
-      } catch (error) {
-        console.error('Error fetching cheque data:', error);
-      }
-    };
+  //       setPendingChequeAmount(pendingResult.totalAmount || 0);
+  //       setClearedChequeAmount(clearedResult.totalAmount || 0);
+  //     } catch (error) {
+  //       console.error('Error fetching cheque data:', error);
+  //     }
+  //   };
 
-    fetchChequeData();
-  }, [base_url]);
+  //   fetchChequeData();
+  // }, [base_url]);
 
-  useEffect(() => {
-    const fetchPendingChequeCount = async () => {
-      try {
-        const response = await fetch(`${config.BASE_URL}/countCheques`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch pending cheque count');
-        }
-        const result = await response.json();
-        setPendingChequeCount(result.count);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-    fetchPendingChequeCount();
-  });
+  // useEffect(() => {
+  //   const fetchPendingChequeCount = async () => {
+  //     try {
+  //       const response = await fetch(`${config.BASE_URL}/countCheques`);
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch pending cheque count');
+  //       }
+  //       const result = await response.json();
+  //       setPendingChequeCount(result.count);
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
+  //   fetchPendingChequeCount();
+  // });
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const response = await fetch(`${base_url}/getReports`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  // useEffect(() => {
+  //   const fetchReports = async () => {
+  //     try {
+  //       const response = await fetch(`${base_url}/getReports`, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
 
-        const data = await response.json();
-        setReportData(data.message);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-    fetchReports();
-  }, [base_url]);
+  //       const data = await response.json();
+  //       setReportData(data.message);
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
+  //   fetchReports();
+  // }, [base_url]);
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -143,7 +143,7 @@ const Dashboard = () => {
                   LastMonthTotal={reportData.revenueLastMonth}
                   todayTotalSales={reportData.salesToday}
                   monthTotalSales={reportData.salesMonth}
-                  totalCheques={pendingChequeCount}
+                  
                 />
               </div>
             </div>
@@ -165,11 +165,11 @@ const Dashboard = () => {
               </div>
             </div>
 
+            
+
             <div className="col-lg-6 col-md-12 mb-4">
               <div className="h-100">
-                <CardTwo
-                  monthlyRevenue={reportData.monthlyRevenue}
-                  monthlySales={reportData.monthlySales}
+                <CardTwo 
                 />
               </div>
             </div>

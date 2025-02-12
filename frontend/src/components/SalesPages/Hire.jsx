@@ -1180,7 +1180,7 @@ const Hire = ({ onSubmit }) => {
                             <User className="me-2" /> Customer Details
                         </h5>
                         <Link to="/customer/customer-list">
-                            <button className="btn btn-success btn-sm">Create Customer</button>
+                            <button className="btn btn-success btn-sm">+ New Customer</button>
                         </Link>
                     </div>
 
@@ -1222,7 +1222,7 @@ const Hire = ({ onSubmit }) => {
                             <i className="bi bi-person-raised-hand me-2" style={{ fontSize: '20px' }}></i>  Guarantor Details
                         </h5>
                         <Link to="/gurantor">
-                            <button className="btn btn-success btn-sm">Create Guarantor</button>
+                            <button className="btn btn-success btn-sm">+ New Guarantor</button>
                         </Link>
                     </div>
 
@@ -1257,7 +1257,7 @@ const Hire = ({ onSubmit }) => {
                             <CarFront className="me-2" />Hire Vehicle Details
                         </h5>
                         <Link to="/product/hire-vechicle-list">
-                            <button className="btn btn-success btn-sm">Create Hire Vechicle</button>
+                            <button className="btn btn-success btn-sm">+ New Hire Vechicle</button>
                         </Link>
                     </div>
                     <select

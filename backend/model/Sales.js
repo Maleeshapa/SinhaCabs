@@ -925,6 +925,7 @@
 
 const { DataTypes } = require('sequelize');
 const sequelize = require('../dbConfig');
+const Product = require('./Products');
 
 const Sales = sequelize.define('Sales', {
     salesId: {
@@ -1021,6 +1022,14 @@ const Transaction = sequelize.define('Transaction', {
             key: 'salesId'
         }
     },
+    pId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'products',
+            key: 'productId'
+        }
+    },
     price: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -1038,6 +1047,10 @@ const Transaction = sequelize.define('Transaction', {
         allowNull: true
     },
     paidAmount: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    due: {
         type: DataTypes.INTEGER,
         allowNull: true
     },
@@ -1065,6 +1078,10 @@ Sales.hasOne(Transaction, {
 Transaction.belongsTo(Sales, { 
     foreignKey: 'salesId'
 });
-
+Transaction.belongsTo(Product, {
+    foreignKey: 'pId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+});
 
 module.exports = { Sales, Transaction };

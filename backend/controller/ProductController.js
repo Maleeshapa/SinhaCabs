@@ -78,7 +78,7 @@ const createProduct = async (req, res) => {
                 productWarranty,
                 productDescription,
                 productImage,
-                productStatus: "Available",
+                productStatus: "Unavailable",
                 productChassi ,
                 rentOrHire ,
                 category_categoryId: categoryId,
@@ -328,6 +328,25 @@ const getProductImageByCode = async (req, res) => {
     }
 };
 
+
+// Get products where rentOrHire column equals 'rent'
+const getRentProducts = async (req, res) => {
+    try {
+        const rentProducts = await Product.findAll({
+            where: { rentOrHire: 'rent' },
+            include: [{ model: Category, as: 'category' }]
+        });
+
+        if (rentProducts.length === 0) {
+            return res.status(404).json({ message: 'No rent products found' });
+        }
+
+        res.status(200).json(rentProducts);
+    } catch (error) {
+        res.status(500).json({ error: `An error occurred: ${error.message}` });
+    }
+};
+
 module.exports = {
     createProduct,
     getAllProducts,
@@ -337,5 +356,6 @@ module.exports = {
     deleteProduct,
     getProductByCodeOrName,
     getProductSuggestions,
-    getProductImageByCode
+    getProductImageByCode,
+    getRentProducts
 };

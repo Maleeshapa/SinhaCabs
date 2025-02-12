@@ -21,7 +21,7 @@ const ProductList = () => {
 
   const fetchProductList = async () => {
     try {
-      const response = await fetch(`${config.BASE_URL}/products`);
+      const response = await fetch(`${config.BASE_URL}/products/getRentProducts`);
       if (!response.ok) {
         throw new Error(`Failed to fetch product list: ${response.status} ${response.statusText}`);
       }

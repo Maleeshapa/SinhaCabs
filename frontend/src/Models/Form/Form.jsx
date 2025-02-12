@@ -262,7 +262,7 @@ const Form = ({ closeModal, onSave, cus }) => {
             </div>
           )}
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="guarantor">Guarantor</label>
             <input
               id="guarantor"
@@ -285,7 +285,7 @@ const Form = ({ closeModal, onSave, cus }) => {
                 ))}
               </ul>
             )}
-          </div>
+          </div> */}
 
           <div className="form-actions">
             <button type="button" onClick={closeModal}>Close</button>

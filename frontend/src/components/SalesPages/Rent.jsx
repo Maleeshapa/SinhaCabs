@@ -45,9 +45,21 @@ const Rent = ({ onSubmit }) => {
     const [paymentType, setPaymentType] = useState('');
 
     useEffect(() => {
+
+        // const fetchHireVehicles = async () => {
+        //     try {
+        //         const response = await fetch(`${config.BASE_URL}/products`);
+        //         if (!response.ok) throw new Error(`Failed to fetch vehicles: ${response.status} ${response.statusText}`);
+        //         const data = await response.json();
+        //         setVehicles(data.filter(vehicle => vehicle.rentOrHire === 'rent'));
+        //     } catch (error) {
+        //         console.error('Error fetching hire vehicles:', error);
+        //     }
+        // };
+
         const fetchHireVehicles = async () => {
             try {
-                const response = await fetch(`${config.BASE_URL}/products`);
+                const response = await fetch(`${config.BASE_URL}/products/getRentProducts`);
                 if (!response.ok) throw new Error(`Failed to fetch vehicles: ${response.status} ${response.statusText}`);
                 const data = await response.json();
                 setVehicles(data.filter(vehicle => vehicle.rentOrHire === 'rent'));
@@ -201,7 +213,7 @@ const Rent = ({ onSubmit }) => {
                             <User className="me-2" /> Customer Details
                         </h5>
                         <Link to="/customer/customer-list">
-                            <button className="btn btn-success btn-sm">Create Customer</button>
+                            <button className="btn btn-primary btn-sm">+ New Customer</button>
                         </Link>
                     </div>
 
@@ -243,7 +255,7 @@ const Rent = ({ onSubmit }) => {
                             <i className="bi bi-person-raised-hand me-2" style={{ fontSize: '20px' }}></i>  Guarantor Details
                         </h5>
                         <Link to="/gurantor">
-                            <button className="btn btn-success btn-sm">Create Guarantor</button>
+                            <button className="btn btn-primary btn-sm">+ New Guarantor</button>
                         </Link>
                     </div>
 
@@ -277,8 +289,8 @@ const Rent = ({ onSubmit }) => {
                         <h5 className="d-flex align-items-center">
                             <CarFront className="me-2" />Rent Vehicle Details
                         </h5>
-                        <Link to="/product/hire-vechicle-list">
-                            <button className="btn btn-success btn-sm">Create Rent Vechicle</button>
+                        <Link to="/product/product-list">
+                            <button className="btn btn-primary btn-sm">+ New Rent Vechicle</button>
                         </Link>
                     </div>
                     <select

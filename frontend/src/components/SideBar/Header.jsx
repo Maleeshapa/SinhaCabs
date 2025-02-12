@@ -66,15 +66,18 @@ const Header = () => {
      
 
      <div className='justify-content-end'>
-     <button className="btn btn-success header-button" onClick={handleNewHireClick}>
-        New Hire
-      </button>
+     
 
   
       <button className="btn btn-danger header-button" onClick={handleNewSaleClick}>
         New Rent
       </button>
       {' '}
+
+      <button className="btn btn-success header-button" onClick={handleNewHireClick}>
+        New Hire
+      </button>
+      
      </div>
      
 

@@ -14,8 +14,8 @@ const HireHistory = () => {
     '#',
     'Sale Date',
     'Customer',
-    'Product',
-    'Payment Status',
+    'Vechicle',
+    'Guarantor Name',
     'Total Amount',
     'Paid Amount',
     'Due Amount',
@@ -45,13 +45,19 @@ const HireHistory = () => {
         const productResponse = await fetch(`${config.BASE_URL}/product/${sale.productId}`);
         const productData = await productResponse.json();
         const productName = productData.productName;
+
+        const guarantorResponse = await fetch(`${config.BASE_URL}/guarantor/${sale.guarantorId}`);
+        const guarantorData = await guarantorResponse.json();
+        const guarantorName = guarantorData.guarantorName;
+  
   
         return [
           index + 1,
           new Date(sale.saleDate).toLocaleDateString(),
           customerName, // Use customer name instead of ID
           productName,  // Use product name instead of ID
-          sale.paymentStatus,
+          // sale.paymentStatus,
+          guarantorName,
           sale.Transaction?.totalAmount || 0,
           sale.Transaction?.paidAmount || 0,
           sale.Transaction?.due || 0,

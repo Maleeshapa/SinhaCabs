@@ -121,9 +121,12 @@ app.get('/salesGet/:id', SalesController.getSaleById);
 app.put('/salesUpdate/:id', SalesController.updateSale);
 app.delete('/salesDelete/:id', SalesController.deleteSale);
 app.get('/revenue-analytics', SalesController.getRevenueAnalytics);
-app.get('/api/monthly-product-income', SalesController.getMonthlyProductIncome);
 
-
+app.get('/api/transactions/all', SalesController.getAllTransactions);
+app.get('/api/transactions/month', SalesController.getCurrentMonthTransactions);
+app.get('/api/sales/month', SalesController.getCurrentMonthSales);
+// app.get('/api/sales/all', SalesController.getAllSalesWithTransactions);
+ 
 //store routes
 app.post("/store", StoreController.createStore);
 app.get("/stores", StoreController.getAllStores);

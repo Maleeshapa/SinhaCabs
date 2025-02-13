@@ -524,37 +524,95 @@ const getRevenueAnalytics = async (req, res) => {
     }
 };
 
-const getMonthlyProductIncome = async (req, res) => {
+const getAllTransactions = async (req, res) => {
     try {
-        const currentDate = new Date();
-        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-
-        const monthlyIncome = await Transaction.findAll({
-            attributes: [
-                [Sequelize.fn('SUM', Sequelize.col('paidAmount')), 'totalIncome'],
-                [Sequelize.col('Product.productName'), 'productName']
-            ],
-            include: [{
-                model: Product,
-                attributes: ['productName']
-            }],
-            where: {
-                createdAt: {
-                    [Op.between]: [firstDayOfMonth, lastDayOfMonth]
-                }
-            },
-            group: ['Product.productId'],
-            raw: true
-        });
-
-        res.status(200).json(monthlyIncome);
+        const transaction = await Transaction.findAll();
+        res.status(200).json(transaction);
     } catch (error) {
-        console.error('Error fetching monthly product income:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
+// const getAllSalesWithTransactions = async (req, res) => {
+//     try {
+//         const sales = await Sales.findAll({
+//             include: [
+//                 {
+//                     model: Transaction,
+//                     attributes: ['transactionId', 'pId', 'price', 'totalAmount', 'paidAmount', 'due', 'paymentType'],
+//                 },
+//                 {
+//                     model: Customer,
+//                     attributes: ['cusName'], // Fetch customer name
+//                 },
+//                 {
+//                     model: Product,
+//                     attributes: ['productName'], // Fetch product name
+//                 }
+//             ],
+//             order: [['createdAt', 'DESC']]
+//         });
+
+//         res.status(200).json(sales);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
+
+const getCurrentMonthTransactions = async (req, res) => {
+    try {
+        // Get the first and last date of the current month
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date();
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        // Fetch transactions only from the current month
+        const transactions = await Transaction.findAll({
+            where: {
+                createdAt: {
+                    [Op.between]: [startOfMonth, endOfMonth]
+                }
+            }
+        });
+
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+const getCurrentMonthSales = async (req, res) => {
+    try {
+        // Get the first and last date of the current month
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date();
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        // Fetch transactions only from the current month
+        const sales = await Sales.findAll({
+            where: {
+                createdAt: {
+                    [Op.between]: [startOfMonth, endOfMonth]
+                }
+            }
+        });
+
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 module.exports = { 
     createSale, 
@@ -565,6 +623,11 @@ module.exports = {
     getAllSalesHire , 
     getAllSalesRent , 
     hireCreate ,
-    getRevenueAnalytics,
-    getMonthlyProductIncome
+    getRevenueAnalytics, 
+    getAllTransactions,
+    getCurrentMonthTransactions,
+    getCurrentMonthSales
+   
+    
+
   };

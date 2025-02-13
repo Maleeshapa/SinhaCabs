@@ -55,6 +55,7 @@ function CardOne() {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
+        // const response = await fetch(`${config.BASE_URL}/salesGet`);
         const response = await fetch(`${config.BASE_URL}/salesGet`);
         if (!response.ok) {
           throw new Error('Failed to fetch sales data');

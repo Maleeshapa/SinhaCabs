@@ -150,9 +150,13 @@ app.get("/expensesCat/:id", ExpensesCatController.getExpensesCatById);
 app.put("/expensesCat/:id", ExpensesCatController.updateExpensesCat);
 app.delete("/expensesCat/:id", ExpensesCatController.deleteExpensesCat);
 
+app.post('/driver', DriverController.createDriver);
 app.get("/getDriver", DriverController.getDriverSuggestions);
 app.get("/getDriverId/:id", DriverController.getDriverById);
+app.delete("/deleteDriverId/:id", DriverController.deleteDriver);
 app.get("/getAllDrivers", DriverController.getAllDrivers);
+app.put('/driver/:id', DriverController.updateDriver);
+
 
 //get reports
 // app.get("/getReports", ReportController.getReports);

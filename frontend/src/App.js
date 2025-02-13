@@ -42,6 +42,7 @@ import SupplierVisePayments from './Models/SupplierForm/SupplierVisePayments';
 import Expenses from './Pages/Expenses/Expenses';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import Gurantor from './Pages/Gurantor/Gurantor';
+import DriverList from './components/DriverList/DriverList';
 
 
 const ProtectedRoute = ({ children }) => {
@@ -89,6 +90,7 @@ function Layout() {
 
 
             <Route path="/gurantor" element={<Gurantor />} />
+            <Route path="/driver" element={<DriverList />} />
 
 
 

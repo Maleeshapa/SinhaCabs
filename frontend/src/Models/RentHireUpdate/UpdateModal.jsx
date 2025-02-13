@@ -286,7 +286,7 @@ const UpdateModal = ({ sale, show, onClose, onSaleUpdated }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h4>Edit Sale Details</h4>
+        <h4>Continue Sale Details</h4>
         <br />
         <form onSubmit={handleSubmit}>
           <div className="form-group">

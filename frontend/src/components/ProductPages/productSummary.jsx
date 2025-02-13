@@ -109,8 +109,8 @@ const ProductSummary = () => {
                   value={product.productStatus}
                   onChange={(e) => handleStatusChange(product, e.target.value)}
                 >
-                  <option value="In stock">In Stock</option>
-                  <option value="Out of Stock">Out of Stock</option>
+                  <option value="In stock">Availabel</option>
+                  <option value="Out of Stock">unavailabel</option>
                 </select>
 
                 <div className="d-flex justify-content-between mt-auto">

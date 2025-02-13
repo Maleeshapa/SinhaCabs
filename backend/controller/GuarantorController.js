@@ -75,6 +75,27 @@ const updateGuarantor = async (req, res) => {
     }
 };
 
+// const deleteGuarantor = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         console.log(`Attempting to delete guarantor with ID: ${id}`); // Log the ID
+
+//         const guarantor = await Guarantor.findByPk(id);
+//         if (!guarantor) {
+//             console.log('Guarantor not found'); // Log if guarantor is not found
+//             return res.status(404).json({ message: 'Guarantor not found' });
+//         }
+
+//         await guarantor.destroy();
+//         console.log('Guarantor deleted successfully'); // Log success
+//         res.status(200).json({ message: 'Guarantor deleted successfully' });
+//     } catch (error) {
+//         console.error('Error deleting guarantor:', error); // Log the error
+//         res.status(500).json({ message: error.message });
+//     }
+// };
+
+
 const deleteGuarantor = async (req, res) => {
     try {
         const { id } = req.params;
@@ -91,7 +112,11 @@ const deleteGuarantor = async (req, res) => {
         res.status(200).json({ message: 'Guarantor deleted successfully' });
     } catch (error) {
         console.error('Error deleting guarantor:', error); // Log the error
-        res.status(500).json({ message: error.message });
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            res.status(400).json({ message: 'Guarantor is in use and cannot be deleted' });
+        } else {
+            res.status(500).json({ message: error.message });
+        }
     }
 };
 

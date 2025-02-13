@@ -45,32 +45,65 @@ const GuarantorList = () => {
     }
   };
 
-  const handleDelete = async () => {
-    try {
-        // Fetch the actual guarantorId from the backend data
-        const response = await fetch(`${config.BASE_URL}/guarantors`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch guarantors');
-        }
-        const guarantors = await response.json();
-        const guarantorToDelete = guarantors[deleteRowIndex];
-        const guarantorId = guarantorToDelete.guarantorId; // Use the actual ID
+//   const handleDelete = async () => {
+//     try {
+//         // Fetch the actual guarantorId from the backend data
+//         const response = await fetch(`${config.BASE_URL}/guarantors`);
+//         if (!response.ok) {
+//             throw new Error('Failed to fetch guarantors');
+//         }
+//         const guarantors = await response.json();
+//         const guarantorToDelete = guarantors[deleteRowIndex];
+//         const guarantorId = guarantorToDelete.guarantorId; // Use the actual ID
 
-        const deleteResponse = await fetch(`${config.BASE_URL}/guarantors/${guarantorId}`, {
-            method: 'DELETE',
-        });
+//         const deleteResponse = await fetch(`${config.BASE_URL}/guarantors/${guarantorId}`, {
+//             method: 'DELETE',
+//         });
 
-        if (!deleteResponse.ok) {
-            throw new Error('Failed to delete guarantor');
-        }
+//         if (!deleteResponse.ok) {
+//             throw new Error('Failed to delete guarantor');
+//         }
 
-        setData(prevData => prevData.filter((_, index) => index !== deleteRowIndex));
-        fetchGuarantors();
-    } catch (err) {
-        setError(err.message);
-    } finally {
-        setShowConfirmModal(false);
-    }
+//         setData(prevData => prevData.filter((_, index) => index !== deleteRowIndex));
+//         fetchGuarantors();
+//     } catch (err) {
+//         setError(err.message);
+//     } finally {
+//         setShowConfirmModal(false);
+//     }
+// };
+
+const handleDelete = async () => {
+  try {
+      // Fetch the actual guarantorId from the backend data
+      const response = await fetch(`${config.BASE_URL}/guarantors`);
+      if (!response.ok) {
+          throw new Error('Failed to fetch guarantors');
+      }
+      const guarantors = await response.json();
+      const guarantorToDelete = guarantors[deleteRowIndex];
+      const guarantorId = guarantorToDelete.guarantorId; // Use the actual ID
+
+      const deleteResponse = await fetch(`${config.BASE_URL}/guarantors/${guarantorId}`, {
+          method: 'DELETE',
+      });
+
+      if (!deleteResponse.ok) {
+          const errorData = await deleteResponse.json();
+          if (deleteResponse.status === 400) {
+              alert(errorData.message); // Show alert if guarantor is in use
+          } else {
+              throw new Error('Failed to delete guarantor');
+          }
+      } else {
+          setData(prevData => prevData.filter((_, index) => index !== deleteRowIndex));
+          fetchGuarantors();
+      }
+  } catch (err) {
+      setError(err.message);
+  } finally {
+      setShowConfirmModal(false);
+  }
 };
 
   const confirmDelete = (rowIndex) => {

@@ -194,8 +194,9 @@ const Table = ({
 
                 <div className="mt-2">
                     <div className="table-table" style={{ borderRadius: "5px"}}>
+                        {/* <table className="table table-primary table-hover table-bordered table-responsive table-striped"> */}
                         <table className="table table-primary table-hover table-bordered table-responsive table-striped">
-                            <thead >
+                            <thead className="thead-dark" >
                                 <tr >
                                     {tableColumns.map((item, index) => (
                                         <th

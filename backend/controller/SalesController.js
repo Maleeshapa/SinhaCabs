@@ -265,9 +265,30 @@ const createSale = async (req, res) => {
     }
 };
 
+
+
+//worked
+// const getAllSales = async (req, res) => {
+//     try {
+//         const sales = await Sales.findAll({ include: [Transaction] });
+//         res.status(200).json(sales);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
+
 const getAllSales = async (req, res) => {
     try {
-        const sales = await Sales.findAll({ include: [Transaction] });
+        const { page = 1, pageSize = 10 } = req.query;
+        const offset = (page - 1) * pageSize;
+
+        const sales = await Sales.findAll({
+            include: [Transaction],
+            limit: parseInt(pageSize),
+            offset: parseInt(offset),
+            order: [['createdAt', 'DESC']]
+        });
+
         res.status(200).json(sales);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -368,39 +389,86 @@ const deleteSale = async (req, res) => {
     }
 };
 
+// const getAllSalesHire = async (req, res) => {
+//     try {
+//         // Fetch only sales where the status is 'hire' and include the associated transactions
+//         const sales = await Sales.findAll({
+//             where: { status: 'hire' },  // Filter by 'hire' status
+//             include: [Transaction]      // Include associated Transaction data
+//         });
+
+//         if (sales.length === 0) {
+//             return res.status(404).json({ message: 'No sales with status "hire" found' });
+//         }
+
+//         res.status(200).json(sales);  // Return the filtered sales data
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });  // Handle any errors
+//     }
+// };
+
 const getAllSalesHire = async (req, res) => {
     try {
-        // Fetch only sales where the status is 'hire' and include the associated transactions
+        const { page = 1, pageSize = 10 } = req.query;
+        const offset = (page - 1) * pageSize;
+
         const sales = await Sales.findAll({
             where: { status: 'hire' },  // Filter by 'hire' status
-            include: [Transaction]      // Include associated Transaction data
+            include: [Transaction],      // Include associated Transaction data
+            limit: parseInt(pageSize),
+            offset: parseInt(offset),
+            order: [['createdAt', 'DESC']]  // Order by creation date
         });
 
         if (sales.length === 0) {
             return res.status(404).json({ message: 'No sales with status "hire" found' });
         }
 
-        res.status(200).json(sales);  // Return the filtered sales data
+        res.status(200).json(sales);  // Return the filtered and paginated sales data
     } catch (error) {
         res.status(500).json({ error: error.message });  // Handle any errors
     }
 };
 
+
+// const getAllSalesRent = async (req, res) => {
+//     try {
+         
+//         const sales = await Sales.findAll({
+//             where: { status: 'rent' },   
+//             include: [Transaction]       
+//         });
+
+//         if (sales.length === 0) {
+//             return res.status(404).json({ message: 'No sales with status "rent" found' });
+//         }
+
+//         res.status(200).json(sales);   
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });   
+//     }
+// };
+
 const getAllSalesRent = async (req, res) => {
     try {
-         
+        const { page = 1, pageSize = 10 } = req.query;
+        const offset = (page - 1) * pageSize;
+
         const sales = await Sales.findAll({
-            where: { status: 'rent' },   
-            include: [Transaction]       
+            where: { status: 'rent' },  // Filter by 'rent' status
+            include: [Transaction],     // Include associated Transaction data
+            limit: parseInt(pageSize),
+            offset: parseInt(offset),
+            order: [['createdAt', 'DESC']]  // Order by creation date
         });
 
         if (sales.length === 0) {
             return res.status(404).json({ message: 'No sales with status "rent" found' });
         }
 
-        res.status(200).json(sales);   
+        res.status(200).json(sales);  // Return the filtered and paginated sales data
     } catch (error) {
-        res.status(500).json({ error: error.message });   
+        res.status(500).json({ error: error.message });  // Handle any errors
     }
 };
 
@@ -524,12 +592,29 @@ const getRevenueAnalytics = async (req, res) => {
     }
 };
 
+// const getAllTransactions = async (req, res) => {
+//     try {
+//         const transaction = await Transaction.findAll();
+//         res.status(200).json(transaction);
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// };
+
 const getAllTransactions = async (req, res) => {
     try {
-        const transaction = await Transaction.findAll();
-        res.status(200).json(transaction);
+        const { page = 1, pageSize = 10 } = req.query;
+        const offset = (page - 1) * pageSize;
+
+        const transactions = await Transaction.findAll({
+            limit: parseInt(pageSize),
+            offset: parseInt(offset),
+            order: [['createdAt', 'DESC']]  // Order by creation date
+        });
+
+        res.status(200).json(transactions);  // Return the paginated transactions
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });  // Handle any errors
     }
 };
 

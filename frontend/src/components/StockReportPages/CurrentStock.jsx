@@ -40,8 +40,8 @@ function CurrentStock() {
             onChange={(e) => handleStatusChange(stock.stockId, e.target.value)}
             disabled={stock.stockQty === 0}
           >
-            <option value="In stock">In stock</option>
-            <option value="Out of Stock">Out of Stock</option>
+           <option value="In stock">Availabel</option>
+           <option value="Out of Stock">unavailabel</option>
           </select>
         ]
       });

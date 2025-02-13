@@ -373,7 +373,7 @@ const RentHistory = () => {
     '#',
     'Sale Date',
     'Customer',
-    'Product',
+    'Vechicle',
     'Guarantor Name',
     'Total Amount',
     'Paid Amount',

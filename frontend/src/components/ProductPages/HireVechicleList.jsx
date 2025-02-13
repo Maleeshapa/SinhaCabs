@@ -47,8 +47,8 @@ const HireVechicleList = () => {
           value={prod.productStatus}
           onChange={(e) => handleStatusChange(prod.productId, e.target.value)}
         >
-          <option value="In stock">In stock</option>
-          <option value="Out of Stock">Out of Stock</option>
+          <option value="In stock">Available</option>
+          <option value="Out of Stock">unavailable</option>
         </select>
       ]);
   

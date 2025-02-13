@@ -155,7 +155,9 @@ const Sidebar = () => {
                 // { title: 'Due Customers', path: '/customer/dueCustomer' },
                 // { title: 'Sale Due Payment', path: '/customer/sale-due-payment' },
                 // { title: 'Customers Due', path: '/due-customer/view-cus-due-history' },
-                { title: 'Current Due List', path: '/due-customer/all-due-customer-list' },
+
+                // { title: 'Current Due List', path: '/due-customer/all-due-customer-list' },
+
                 // { title: 'All Due History', path: '/due-customer/all-due-history' },
             ]
         },
@@ -174,9 +176,9 @@ const Sidebar = () => {
         {
             title: 'Driver',
             icon: <i className="bi bi-person-raised-hand" style={{ fontSize: '20px' }}></i>,
-            path: '/gurantor',
+            path: '/driver',
             submenus: [
-                { title: 'Gurantor List', path: '/gurantor' }
+                { title: 'Driver List', path: '/driver' }
             ]
         }
         ,
@@ -205,16 +207,16 @@ const Sidebar = () => {
         },
 
 
-        {
-            title: 'Sales Reports',
-            icon: <FileText size={20} />,
-            path: '/sales-reports',
-            submenus: [
-                { title: 'Daily Summary', path: '/sales-reports/daily-summary' },
-                { title: 'Sales History', path: '/sales-reports/sales-history' },
-                { title: 'Profit and Loss Account', path: '/sales-reports' },
-            ]
-        },
+        // {
+        //     title: 'Sales Reports',
+        //     icon: <FileText size={20} />,
+        //     path: '/sales-reports',
+        //     submenus: [
+        //         { title: 'Daily Summary', path: '/sales-reports/daily-summary' },
+        //         { title: 'Sales History', path: '/sales-reports/sales-history' },
+        //         { title: 'Profit and Loss Account', path: '/sales-reports' },
+        //     ]
+        // },
 
         
         {

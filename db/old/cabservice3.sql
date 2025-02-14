@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2025 at 07:06 PM
+-- Generation Time: Feb 13, 2025 at 04:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -385,7 +385,7 @@ INSERT INTO `products` (`productId`, `productName`, `productCode`, `productChass
 (19, 'van test', 'van test 123', '80000', NULL, 300, '', NULL, 'van test', NULL, 'In stock', NULL, 2),
 (20, 'cccccc', '666', '666', NULL, 6666, '', NULL, '6666', NULL, 'In stock', NULL, 2),
 (21, 'abcd', 'abcd 600', 'abcd 600', NULL, 600, '', NULL, 'abcd', NULL, 'In stock', 'hire', 2),
-(22, 'new', 'hire xxx', 'hire xxx', NULL, 5000, '', NULL, 'hire new', NULL, 'Out of Stock', 'hire', 2);
+(22, 'new', 'hire xxx', 'hire xxx', NULL, 5000, '', NULL, 'hire new', NULL, 'Unavailable', 'hire', 2);
 
 -- --------------------------------------------------------
 
